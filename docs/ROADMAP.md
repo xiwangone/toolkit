@@ -15,7 +15,8 @@
 - 编译类任务在 CI 执行（`.github/workflows/build-synaptic.yml`，手动触发，产物上传 artifact），不占本地资源
 - 产物纳入本仓库 `bin/`，本地直接索引 Kotlin/Java 仓库出代码图谱
 
-## 阶段 4：代码质量门禁 / 开发修复类扩展
-- 质量门禁脚本（健康分、零退化率检查）接入常用工程流程
-- 开发修复类工具（代码审查、变更影响评估、回归防护）逐步补充
-- 按主题新开子目录，每个工具自带 README 与用法说明
+## 阶段 4：代码质量门禁 / 开发修复类扩展（进行中）
+- ✅ 一键体检脚本 `scripts/audit.sh`（结构/依赖/质量/风险，输出 JSON + Markdown 报告）
+- ✅ 引用技能 `skills/mcp-builder`（Apache-2.0，MCP 服务器开发指南，许可保留）
+- ✅ 参考索引 `docs/REFERENCE.md`（高价值开源项目：anthropics/skills、awesome-agent-skills、static-analysis、awesome-cli-apps、Kotlin 官方技能、Synaptic 等）
+- 待办：质量门禁脚本（健康分、零退化率检查）接入常用工程流程；开发修复类工具（代码审查、变更影响评估）逐步补充
