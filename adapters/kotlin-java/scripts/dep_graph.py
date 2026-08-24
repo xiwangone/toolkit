@@ -30,6 +30,7 @@ LANG_EXTENSIONS = {
     ".c": "c", ".h": "c", ".cpp": "cpp", ".cc": "cpp", ".cxx": "cpp", ".hpp": "cpp",
     ".rs": "rust",
     ".ts": "typescript", ".tsx": "typescript", ".js": "javascript", ".jsx": "javascript",
+    ".java": "java", ".kt": "kotlin",
 }
 
 IGNORE_DIRS = {
@@ -141,6 +142,29 @@ def parse_ts_js_imports(source: str, filepath: str, target: str) -> list:
     return imports
 
 
+JAVA_KT_IMPORT_RE = re.compile(r"^\s*import\s+(?:static\s+)?([\w.]+(?:\.[\w*])?)(?:\s+as\s+\w+)?\s*;?\s*$", re.MULTILINE)
+
+
+def _java_pkg_part(rel: str) -> str:
+    """Strip source-root prefixes from a Java/Kotlin relative path."""
+    for prefix in ("src/main/java/", "src/main/kotlin/", "src/main/", "src/"):
+        if rel.startswith(prefix):
+            return rel[len(prefix):]
+    return rel
+
+
+def parse_java_kotlin_imports(source: str) -> list:
+    """Parse Java/Kotlin imports, returning slash-separated package paths."""
+    imports = []
+    for m in JAVA_KT_IMPORT_RE.finditer(source):
+        path = m.group(1)
+        if path.endswith(".*"):
+            path = path[:-2]
+        if path:
+            imports.append(path.replace(".", "/"))
+    return imports
+
+
 # ── Module resolution ───────────────────────────────────────────────
 
 def file_to_module(filepath: str, target: str) -> str:
@@ -223,6 +247,18 @@ def build_dependency_graph(target: str, max_depth: int = 0) -> tuple:
                 if rel_root.parts:
                     local_go_dirs.add(rel_root.parts[0])
 
+    # Java/Kotlin: 包路径后缀 → 顶层模块 索引
+    java_kt_suffix = {}
+    for fpath in file_list:
+        extj = Path(fpath).suffix.lower()
+        if extj not in (".java", ".kt"):
+            continue
+        relj = os.path.relpath(fpath, target).replace(os.sep, "/")
+        pkg = _java_pkg_part(relj)
+        if pkg.endswith((".kt", ".java")):
+            pkg = pkg[: pkg.rfind(".")]
+        java_kt_suffix.setdefault(pkg, Path(relj).parts[0])
+
     # Second pass: parse imports and build edges
     for fpath in file_list:
         ext = Path(fpath).suffix.lower()
@@ -257,6 +293,11 @@ def build_dependency_graph(target: str, max_depth: int = 0) -> tuple:
             for typ, name in parse_ts_js_imports(source, fpath, target):
                 if typ == "internal" and name in modules and name != src_mod:
                     new_deps.add(name)
+        elif lang in ("java", "kotlin"):
+            for ip in parse_java_kotlin_imports(source):
+                mod = java_kt_suffix.get(ip)
+                if mod and mod != src_mod:
+                    new_deps.add(mod)
 
         adj[src_mod].update(new_deps)
 

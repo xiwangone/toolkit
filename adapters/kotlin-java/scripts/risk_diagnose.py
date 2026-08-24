@@ -41,6 +41,7 @@ LANG_EXTENSIONS = {
     ".c": "c", ".h": "c", ".cpp": "cpp", ".cc": "cpp", ".cxx": "cpp", ".hpp": "cpp",
     ".rs": "rust",
     ".ts": "typescript", ".tsx": "typescript", ".js": "javascript", ".jsx": "javascript",
+    ".java": "java", ".kt": "kotlin",
 }
 
 IGNORE_DIRS = {
@@ -135,6 +136,8 @@ FUNC_RE = {
     "rust": re.compile(r"^\s*(pub\s+)?(async\s+)?fn\s+(\w+)", re.MULTILINE),
     "typescript": re.compile(r"^\s*(export\s+)?(async\s+)?function\s+(\w+)", re.MULTILINE),
     "javascript": re.compile(r"^\s*(export\s+)?(async\s+)?function\s+(\w+)", re.MULTILINE),
+    "java": re.compile(r"^\s*(public|private|protected)?\s*(static)?\s*\w[\w<>\s\[\]]*\s+(\w+)\s*\([^;]*\)\s*\{", re.MULTILINE),
+    "kotlin": re.compile(r"^\s*(?:(?:public|private|protected|internal|override|suspend|inline|infix|tailrec|external|operator|open|final|abstract|data|sealed|inner)\s+)*(?:suspend\s+)?fun\s+(?:<[^>]*>\s*)?(\w+)\s*\(", re.MULTILINE),
 }
 
 DECISION_RE = {
@@ -144,6 +147,8 @@ DECISION_RE = {
     "rust": re.compile(r"\b(if|else\s+if|for|while|loop|match|=>|&&|\|\|)\b"),
     "typescript": re.compile(r"\b(if|else\s+if|for|while|case|catch|\?\s|&&|\|\||switch)\b"),
     "javascript": re.compile(r"\b(if|else\s+if|for|while|case|catch|\?\s|&&|\|\||switch)\b"),
+    "java": re.compile(r"\b(if|else\s+if|for|while|case|catch|\?\s|&&|\|\||switch)\b"),
+    "kotlin": re.compile(r"\b(if|else\s+if|for|while|case|catch|\?\s|&&|\|\||switch)\b"),
 }
 
 
@@ -392,6 +397,19 @@ def imports_ts_js(source):
     return _regex_imports(source, TS_IMPORT_RE) + _regex_imports(source, TS_REQUIRE_RE)
 
 
+JAVA_KT_IMPORT_RE = re.compile(r"^\s*import\s+(?:static\s+)?([\w.]+(?:\.[\w*])?)(?:\s+as\s+\w+)?\s*;?\s*$", re.MULTILINE)
+
+
+def imports_java_kt(source: str) -> list:
+    """Parse Java/Kotlin imports, returning stripped package names."""
+    out = []
+    for m in JAVA_KT_IMPORT_RE.finditer(source):
+        p = m.group(1).rstrip(".*")
+        if p:
+            out.append(p)
+    return out
+
+
 def extract_imports(source, lang):
     """Return list of imported module strings for a file."""
     if lang == "python":
@@ -402,6 +420,8 @@ def extract_imports(source, lang):
         return imports_c_family(source)
     if lang == "rust":
         return imports_rust(source)
+    if lang in ("java", "kotlin"):
+        return imports_java_kt(source)
     return imports_ts_js(source)
 
 
