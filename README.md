@@ -7,8 +7,9 @@
 | 路径 | 说明 |
 | --- | --- |
 | `adapters/kotlin-java/` | Kotlin/Java 工程分析工具的适配工作区（含 arch-optimize 组件，MIT，版权见子目录 LICENSE 文件） |
-| `scripts/` | 通用效率脚本（按主题扩展） |
-| `docs/` | 说明与规划（`ROADMAP.md`） |
+| `skills/` | 引用的标准 Agent 技能（如 mcp-builder，Apache-2.0，许可随技能目录保留） |
+| `scripts/` | 通用效率脚本（如 `audit.sh` 一键架构体检） |
+| `docs/` | 说明与规划（`ROADMAP.md`）与参考索引（`REFERENCE.md`） |
 | `.github/workflows/` | CI：构建类任务（如 Synaptic 编译）在 GitHub Actions 上运行，产物上传 artifact |
 
 ## 使用
