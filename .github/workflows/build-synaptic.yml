@@ -1,0 +1,23 @@
+name: build-synaptic
+# 在 CI 上构建 Synaptic 二进制（仅手动触发，产物上传 artifact，不占本地资源）
+on:
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ColinVaughn/Synaptic
+          ref: master
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Build release
+        run: cargo build --release
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: synaptic-linux-x64
+          path: target/release/synaptic
+          retention-days: 30
