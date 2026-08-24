@@ -138,6 +138,7 @@ FUNC_RE = {
     "typescript": re.compile(r"^\s*(export\s+)?(async\s+)?function\s+(\w+)|^\s*(\w+)\s*\([^)]*\)\s*[:{]", re.MULTILINE),
     "javascript": re.compile(r"^\s*(export\s+)?(async\s+)?function\s+(\w+)|^\s*(\w+)\s*\([^)]*\)\s*[:{]", re.MULTILINE),
     "java": re.compile(r"^\s*(public|private|protected)?\s*(static)?\s*\w[\w<>\[\]]*\s+(\w+)\s*\([^;]*\)\s*\{", re.MULTILINE),
+    "kotlin": re.compile(r"^\s*(?:(?:public|private|protected|internal|override|suspend|inline|infix|tailrec|external|operator|open|final|abstract|data|sealed|inner)\s+)*(?:suspend\s+)?fun\s+(?:<[^>]*>\s*)?(\w+)\s*\(", re.MULTILINE),
 }
 
 DECISION_RE = {
@@ -148,6 +149,7 @@ DECISION_RE = {
     "typescript": C_DECISION_RE,
     "javascript": C_DECISION_RE,
     "java": C_DECISION_RE,
+    "kotlin": C_DECISION_RE,
 }
 
 
