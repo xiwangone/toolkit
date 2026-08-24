@@ -1,5 +1,5 @@
 name: build-synaptic
-# 在 CI 上构建 Synaptic 二进制（仅手动触发，产物上传 artifact，不占本地资源）
+# CI 构建 Synaptic 二进制（x86_64 + aarch64 交叉编译，仅手动触发，产物上传 artifact）
 on:
   workflow_dispatch:
 
@@ -13,11 +13,20 @@ jobs:
           ref: master
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
-      - name: Build release
+      - name: Add aarch64 target + linker
+        run: |
+          rustup target add aarch64-unknown-linux-gnu
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq gcc-aarch64-linux-gnu
+      - name: Build release (x86_64)
         run: cargo build --release
-      - name: Upload artifact
+      - name: Build release (aarch64 cross)
+        run: cargo build --release --target aarch64-unknown-linux-gnu
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: synaptic-linux-x64
-          path: target/release/synaptic
+          name: synaptic-linux-binaries
+          path: |
+            target/release/synaptic
+            target/aarch64-unknown-linux-gnu/release/synaptic
           retention-days: 30
