@@ -11,9 +11,10 @@
 - `risk_diagnose.py`：同步注册 .kt/.java，补 import 提取分支，R1-R6 全量扫描 Kotlin 源码
 - 验证：对 reasonix-agents（Kotlin）与 rikkahub-agents（多模块）实测通过
 
-## 阶段 3：Synaptic（CodeGraph）集成
-- 编译类任务在 CI 执行（`.github/workflows/build-synaptic.yml`，手动触发，产物上传 artifact），不占本地资源
-- 产物纳入本仓库 `bin/`，本地直接索引 Kotlin/Java 仓库出代码图谱
+## 阶段 3：Synaptic（CodeGraph）集成 ✅ 已完成
+- 编译类任务在 CI 执行（`.github/workflows/build-synaptic.yml`，手动触发，产物上传 artifact：`synaptic-linux-binaries` 含 x86_64 + aarch64），不占本地资源
+- 实测（设备 aarch64 + Kotlin 仓库）：extract 建图成功（3298 节点 / 8088 边 / 23 社区），refs/query 查询可用，输出 synaptic-out/ 多格式图谱
+- 使用说明与 AGPL 许可提示已入 README；二进制不入 git（CI artifact 分发）
 
 ## 阶段 4：代码质量门禁 / 开发修复类扩展（进行中）
 - ✅ 一键体检脚本 `scripts/audit.sh`（结构/依赖/质量/风险，输出 JSON + Markdown 报告）

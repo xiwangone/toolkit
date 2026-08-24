@@ -22,7 +22,15 @@ python3 adapters/kotlin-java/scripts/dep_graph.py --target <项目> --json
 python3 adapters/kotlin-java/scripts/quality_metrics.py --target <项目> --json
 python3 adapters/kotlin-java/scripts/risk_diagnose.py --target <项目> --json
 python3 adapters/kotlin-java/scripts/regression_guard.py record --output <基线.json>
+bash scripts/audit.sh <项目>          # 一键体检：四份 JSON + Markdown 报告
 ```
+
+## Synaptic（代码图谱）
+
+- 二进制由 CI 编译（`.github/workflows/build-synaptic.yml`，x86_64 + aarch64），从 Actions artifact 获取（`synaptic-linux-binaries`，保留 30 天）。
+- 常用命令：`synaptic extract <项目>`（建图，输出 synaptic-out/ 多格式图谱：graph.html/json/svg/dot/graphml/cypher）、`synaptic refs <符号>` / `query` / `path`（图谱查询）、`synaptic serve`（MCP server，供 AI 助手用）。
+- 实测（aarch64 设备，Kotlin 仓库）：183 代码文件 → 3298 节点 / 8088 边 / 23 社区；`GRAPH_REPORT.md` 输出 God Nodes 与架构统计。
+- **许可：AGPL-3.0-or-later**——本地/CI 内部使用 OK；对外分发/再发布前须履行 AGPL 义务。
 
 ## 许可证
 
