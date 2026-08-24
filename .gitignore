@@ -1,0 +1,8 @@
+# 产物与临时文件
+*.zip
+*.tar.gz
+*.apk
+.env
+bin/
+__pycache__/
+*.pyc
