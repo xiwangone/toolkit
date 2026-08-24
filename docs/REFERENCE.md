@@ -11,7 +11,7 @@
 | Kotlin/kotlin-agent-skills（1k⭐） | Kotlin 官方 AI 技能（backend/tooling 类） | Apache-2.0 |
 | agentskills.io | Agent Skills 规范标准 | 规范文档 |
 | reasonix.io/skills/ | Reasonix 生态技能市场（skill/mcp/plugin 三类，带安装量） | 随各包 |
-| ColinVaughn/Synaptic（CodeGraph） | 跨语言代码图谱（34+ 语言含 Kotlin/Java），MCP 可选 | MIT |
+| ColinVaughn/Synaptic（CodeGraph） | 跨语言代码图谱（34+ 语言含 Kotlin/Java），MCP 可选；本地内部使用，分发/再发布须遵守 AGPL 义务 | AGPL-3.0-or-later |
 | dev-vikas-soni/gradle-lighthouse | Android Gradle 模块图、循环依赖、构建审计（需 Gradle/JVM） | 随仓库 |
 
 ## 使用建议
