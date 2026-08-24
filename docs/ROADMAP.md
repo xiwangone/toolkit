@@ -17,6 +17,7 @@
 
 ## 阶段 4：代码质量门禁 / 开发修复类扩展（进行中）
 - ✅ 一键体检脚本 `scripts/audit.sh`（结构/依赖/质量/风险，输出 JSON + Markdown 报告）
-- ✅ 引用技能 `skills/mcp-builder`（Apache-2.0，MCP 服务器开发指南，许可保留）
+- ✅ 引用技能：`skills/mcp-builder`（MCP 服务开发）、`skills/frontend-design`（前端/UI 交互设计）、`skills/kotlin-tooling-agp9-migration`（Android Gradle 迁移）；均 Apache-2.0，许可保留
+- ✅ 跨 Agent 兼容：技能遵循 Agent Skills 标准（SKILL.md + frontmatter），Reasonix / Claude Code / Codex / RikkaHub 均可直接使用
 - ✅ 参考索引 `docs/REFERENCE.md`（高价值开源项目：anthropics/skills、awesome-agent-skills、static-analysis、awesome-cli-apps、Kotlin 官方技能、Synaptic 等）
 - 待办：质量门禁脚本（健康分、零退化率检查）接入常用工程流程；开发修复类工具（代码审查、变更影响评估）逐步补充
