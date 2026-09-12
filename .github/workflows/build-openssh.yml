@@ -15,14 +15,19 @@ jobs:
           sudo apt-get install -y -qq curl unzip perl make
           curl -sL --retry 3 -o /tmp/ndk.zip https://dl.google.com/android/repository/android-ndk-r27c-linux.zip
           unzip -q /tmp/ndk.zip -d /opt
-          echo "NDK=/opt/android-ndk-r27c" >> $GITHUB_ENV
+          echo "== /opt =="; ls -d /opt/android-* 2>/dev/null || ls -la /opt
+          NDK_DIR=$(ls -d /opt/android-ndk-* 2>/dev/null | head -1)
+          test -n "$NDK_DIR" || { echo "NDK 解压失败"; exit 1; }
+          echo "NDK=$NDK_DIR" >> $GITHUB_ENV
+          echo "探测到 NDK: $NDK_DIR"
+          ls "$NDK_DIR/toolchains/llvm/prebuilt/linux-x86_64/bin" | grep -E "^aarch64-linux-android26-clang$" || echo "(!) 未找到 26-clang" 
 
       - name: 编译 OpenSSL
         run: |
           curl -sL --retry 3 -o /tmp/ssl.tgz https://github.com/openssl/openssl/releases/download/openssl-3.0.15/openssl-3.0.15.tar.gz
           tar xzf /tmp/ssl.tgz -C /tmp
           cd /tmp/openssl-3.0.15
-          export NDK_ROOT=/opt/android-ndk-r27c
+          export NDK_ROOT="$NDK"
           B=$NDK_ROOT/toolchains/llvm/prebuilt/linux-x86_64/bin
           export PATH=$B:$PATH
           echo "== 工具链检查 =="; ls -d $B; ls $B | grep -E "^aarch64-linux-android(26|21)-clang$" | head -3
