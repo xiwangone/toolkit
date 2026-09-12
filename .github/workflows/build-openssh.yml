@@ -45,6 +45,8 @@ jobs:
           printf '#ifndef __sentinel__\n#define __sentinel__(x)\n#endif\n' > /tmp/bionic_compat.h
           cat /tmp/bionic_compat.h
           export CFLAGS="-include /tmp/bionic_compat.h -Wno-error"
+          # bionic 已提供这些函数，但 configure 探测会失败 → 预先告知，避免重复定义
+          export ac_cv_func_bzero=yes ac_cv_func_explicit_bzero=yes ac_cv_func_memset_s=yes
           M=/data/adb/modules/sshd_autostart
           ./configure --host=aarch64-linux-android \
             --with-ssl-dir=/tmp/ssl \
