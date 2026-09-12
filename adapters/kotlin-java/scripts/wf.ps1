@@ -60,7 +60,7 @@ $CONFIG = @{
 
     # 全局 MCP 配置
     CodebaseMemory = "D:\开发\codebase-memory-mcp\bin\codebase-memory-mcp.exe"
-    Srclight       = "C:\Users\<user>\AppData\Local\Programs\Python\Python311\Scripts\srclight.exe"
+    Srclight       = "C:\Users\$env:USERNAME\AppData\Local\Programs\Python\Python311\Scripts\srclight.exe"
 
     # 本地漏洞挖掘脚本
     VulnScript = [System.IO.Path]::Combine($PSScriptRoot, "vuln-scan.ps1")

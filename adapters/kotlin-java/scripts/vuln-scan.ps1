@@ -457,9 +457,9 @@ function Invoke-MCPAudit {
 
     # 全局 MCP 配置
     $globalMCP = @(
-        "C:\Users\<user>\AppData\Roaming\app\config.toml",
-        "C:\Users\<user>\AppData\Roaming\Claude\claude_desktop_config.json",
-        "C:\Users\<user>\.trae-cn\config.json"
+        "C:\Users\$env:USERNAME\AppData\Roaming\<tool>\config.toml",
+        "C:\Users\$env:USERNAME\AppData\Roaming\Claude\claude_desktop_config.json",
+        "C:\Users\$env:USERNAME\.trae-cn\config.json"
     )
 
     foreach ($path in $globalMCP) {

@@ -63,7 +63,7 @@ BUILD_FILES = [
 
 # Architecture documents to locate (priority order)
 ARCH_DOCS = [
-    "SPEC.md", "CLAUDE.md", "<doc>.md", "ARCHITECTURE.md",
+    "SPEC.md", "CLAUDE.md", "ARCHITECTURE.md",
     "DESIGN.md", "CONTRIBUTING.md", "README.md",
 ]
 
