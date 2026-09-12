@@ -1,0 +1,14 @@
+Port 22
+AddressFamily any
+HostKey /data/adb/modules/sshd_autostart/etc/ssh_host_ed25519_key
+AuthorizedKeysFile /data/adb/modules/sshd_autostart/etc/authorized_keys
+PermitRootLogin prohibit-password
+PubkeyAuthentication yes
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+UsePAM no
+StrictModes no
+PrintMotd no
+AllowTcpForwarding yes
+X11Forwarding no
+Subsystem sftp /data/adb/modules/sshd_autostart/libexec/sftp-server

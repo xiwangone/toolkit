@@ -1,0 +1,6 @@
+id=sshd_autostart
+name=Root SSHD Autostart
+version=v2.0
+versionCode=3
+author=agents
+description=Bundles OpenSSH and starts a root sshd on port 22 at boot. Config/keys live in the module dir. Use the action button in Magisk to start/stop/status.
