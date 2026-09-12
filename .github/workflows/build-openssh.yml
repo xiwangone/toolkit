@@ -1,0 +1,56 @@
+name: build-openssh
+# 构建静态 OpenSSH（aarch64），手动触发，产物上传 artifact
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 准备交叉工具链
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq curl xz-utils perl make
+          curl -sL -o /tmp/musl-cross.tgz https://musl.cc/aarch64-linux-musl-cross.tgz
+          sudo tar -xzf /tmp/musl-cross.tgz -C /opt
+          echo "/opt/aarch64-linux-musl-cross/bin" >> $GITHUB_PATH
+
+      - name: 编译 OpenSSL（静态）
+        run: |
+          curl -sL -o /tmp/ssl.tgz https://github.com/openssl/openssl/releases/download/openssl-3.0.15/openssl-3.0.15.tar.gz
+          tar xzf /tmp/ssl.tgz -C /tmp
+          cd /tmp/openssl-3.0.15
+          ./Configure linux-aarch64 no-shared no-tests no-async \
+            CC=aarch64-linux-musl-gcc AR=aarch64-linux-musl-ar RANLIB=aarch64-linux-musl-ranlib \
+            --prefix=/tmp/ssl
+          make -j$(nproc) >/tmp/ssl.log 2>&1 || { tail -30 /tmp/ssl.log; exit 1; }
+          make install_sw >/dev/null 2>&1
+
+      - name: 编译 OpenSSH（静态）
+        run: |
+          curl -sL -o /tmp/ssh.tgz https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-9.9p2.tar.gz
+          tar xzf /tmp/ssh.tgz -C /tmp
+          cd /tmp/openssh-9.9p2
+          ./configure --host=aarch64-linux-musl \
+            --with-ssl-dir=/tmp/ssl \
+            --with-privsep-user=root \
+            --without-pam --without-zlib-version-check --with-sandbox=no \
+            CC=aarch64-linux-musl-gcc AR=aarch64-linux-musl-ar RANLIB=aarch64-linux-musl-ranlib \
+            LDFLAGS=-static
+          make -j$(nproc) sshd sshd-session sftp-server ssh-keygen scp >/tmp/ssh.log 2>&1 || { tail -40 /tmp/ssh.log; exit 1; }
+
+      - name: 收集产物
+        run: |
+          mkdir -p out
+          for f in sshd sshd-session sshd-auth sftp-server ssh-keygen scp; do
+            [ -f "/tmp/openssh-9.9p2/$f" ] && cp "/tmp/openssh-9.9p2/$f" out/ || true
+          done
+          ls -l out
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: openssh-static-aarch64
+          path: out/
+          retention-days: 14
