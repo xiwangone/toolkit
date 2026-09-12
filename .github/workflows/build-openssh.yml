@@ -27,16 +27,9 @@ jobs:
           curl -sL --retry 3 -o /tmp/ssl.tgz https://github.com/openssl/openssl/releases/download/openssl-3.0.15/openssl-3.0.15.tar.gz
           tar xzf /tmp/ssl.tgz -C /tmp
           cd /tmp/openssl-3.0.15
-          export NDK_ROOT="$NDK"
-          B=$NDK_ROOT/toolchains/llvm/prebuilt/linux-x86_64/bin
-          export PATH=$B:$PATH
-          echo "== 工具链检查 =="; ls -d $B; ls $B | grep -E "^aarch64-linux-android(26|21)-clang$" | head -3
-          # OpenSSL 的 android target 硬查 gcc 命名的工具链，用软链接桥接
-          for t in gcc g++ clang clang++; do sudo ln -sf $B/aarch64-linux-android26-clang /usr/local/bin/aarch64-linux-android-$t; done
-          sudo ln -sf $B/llvm-ar /usr/local/bin/aarch64-linux-android-ar
-          sudo ln -sf $B/llvm-ranlib /usr/local/bin/aarch64-linux-android-ranlib
-          sudo ln -sf $B/llvm-strip /usr/local/bin/aarch64-linux-android-strip
-          echo "== 链接生效? =="; which aarch64-linux-android-gcc; aarch64-linux-android-gcc --version | head -1
+          export ANDROID_NDK_ROOT="$NDK"
+          export PATH="$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin:$PATH"
+          echo "== NDK 探测 =="; echo "ANDROID_NDK_ROOT=$ANDROID_NDK_ROOT"; ls "$ANDROID_NDK_ROOT/toolchains/llvm/prebuilt/linux-x86_64/bin" | grep -E "^aarch64-linux-android26-clang$"
           ./Configure android-arm64 -D__ANDROID_API__=26 no-shared no-tests --prefix=/tmp/ssl
           make -j$(nproc) >/tmp/ssl.log 2>&1 || { tail -30 /tmp/ssl.log; exit 1; }
           make install_sw >/dev/null 2>&1
