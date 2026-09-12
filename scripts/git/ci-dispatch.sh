@@ -14,7 +14,7 @@ INPUTS="${3:-}"
 BODY="{\"ref\":\"${REF}\"}"
 [[ -n "$INPUTS" ]] && BODY="{\"ref\":\"${REF}\",\"inputs\":${INPUTS}}"
 
-CODE="$(curl -sS -o /dev/null -w '%{http_code}' -X PATCH -X POST \
+CODE="$(curl -sS -o /dev/null -w '%{http_code}' -X POST \
   -H "Authorization: Bearer ${GH_TOKEN}" \
   -H "Accept: application/vnd.github+json" \
   "https://api.github.com/repos/${REPO}/actions/workflows/${WF}/dispatches" \
