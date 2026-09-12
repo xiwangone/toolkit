@@ -43,10 +43,13 @@ jobs:
           export CC=aarch64-linux-android26-clang AR=llvm-ar RANLIB=llvm-ranlib
           # bionic 无 __sentinel__（glibc 扩展）→ 置空，避免 krl.c 编译失败
           export CFLAGS="-D__sentinel__(x)= -Wno-error"
+          M=/data/adb/modules/sshd_autostart
           ./configure --host=aarch64-linux-android \
             --with-ssl-dir=/tmp/ssl \
             --with-privsep-user=root \
-            --without-pam --with-sandbox=no --without-zlib-version-check
+            --without-pam --with-sandbox=no --without-zlib-version-check \
+            --prefix=$M --sysconfdir=$M/etc --libexecdir=$M/libexec \
+            --with-privsep-path=$M/empty
           make -j$(nproc) sshd sshd-session sftp-server ssh-keygen scp >/tmp/ssh.log 2>&1 || { tail -40 /tmp/ssh.log; exit 1; }
 
       - name: 收集产物
