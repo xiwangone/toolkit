@@ -10,4 +10,4 @@ set_perm_recursive "$MODPATH/libexec" 0 0 0755 0755
 mkdir -p "$MODPATH/etc" "$MODPATH/empty"
 chmod 700 "$MODPATH/etc"
 ui_print "- sshd_autostart: bundled OpenSSH (port 22)"
-ui_print "- 请把公钥追加到: $MODPATH/etc/authorized_keys"
+ui_print "- 请把公钥追加到: /data/ssh/authorized_keys（模块目录外，重装不丢）"
