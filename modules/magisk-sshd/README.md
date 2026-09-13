@@ -23,7 +23,7 @@
 2. 把主程序（`sshd`、`ssh-keygen`、`scp`）放进 `bin/`，辅助程序（`sshd-session`、`sftp-server`、`sshd-auth`）放进 `libexec/`；
 3. 打包 zip（zip 根目录直接含 `module.prop` 等文件）；
 4. 在 Magisk / KernelSU 里「从本地安装」→ 重启；
-5. 把**自己的公钥**追加到 `/data/adb/modules/sshd_autostart/etc/authorized_keys`（模块不含公钥）。
+5. 把**自己的公钥**追加到 `/data/ssh/authorized_keys`（模块目录外；模块不含公钥，重装/更新不丢）。
 
 ## 已知适配（Android / bionic，构建侧已处理）
 
