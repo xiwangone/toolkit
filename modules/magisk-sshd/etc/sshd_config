@@ -6,7 +6,7 @@ PermitRootLogin prohibit-password
 PubkeyAuthentication yes
 PasswordAuthentication no
 KbdInteractiveAuthentication no
-UsePAM no
+#UsePAM no
 StrictModes no
 PrintMotd no
 AllowTcpForwarding yes
